@@ -6,11 +6,13 @@
   <title>理赔重叠消重台</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='theme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='layout.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='bank.css') }}">
 </head>
 <body class="p0844 layout-tabs">
 <div class="shell">
   <nav class="rail" aria-label="阶段导航">
     <a class="brand" href="/" aria-label="工作台首页">理赔</a>
+    <a class="bank-nav-link" href="/bank" data-testid="bank-nav-link">银行到账对账</a>
     <p class="rail-label">处理阶段</p>
     <div id="stage-nav"></div>
     <p class="rail-note">v1.0 · 本地批次</p>
@@ -37,5 +39,6 @@
 </div>
 <script src="{{ url_for('static', filename='charts.js') }}"></script>
 <script src="{{ url_for('static', filename='workbench.js') }}"></script>
+<script src="{{ url_for('static', filename='bank.js') }}"></script>
 </body>
 </html>

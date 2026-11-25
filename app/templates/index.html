@@ -40,5 +40,88 @@
       </div>
     </article>
   </section>
+
+  <section class="bank-workbench" id="bank-workbench" data-testid="bank-workbench" aria-labelledby="bank-title">
+    <div class="bank-head">
+      <div>
+        <p class="bank-eyebrow">BANK RECEIPTS × ISSUED PAYABLES</p>
+        <h2 id="bank-title">银行到账对账</h2>
+        <p class="bank-rule">只拿已签发的应付对账；一笔到账可覆盖多笔应付。金额相符但归属不唯一的份额挂账，归属可确认的份额当天结清；晚到流水只认领剩余份额，同一流水重试不重复销账。</p>
+      </div>
+      <div class="bank-demo-actions">
+        <button type="button" id="bank-demo-first" data-demo="first">载入歧义场景</button>
+        <button type="button" id="bank-demo-late" data-demo="late">歧义 + 晚到认领</button>
+        <button type="button" id="bank-demo-all" data-demo="all">完整晚到序列</button>
+        <button type="button" id="bank-refresh">刷新工作台</button>
+        <button type="button" id="bank-reset" class="secondary">重置</button>
+      </div>
+    </div>
+
+    <div class="bank-kpis" aria-label="银行对账关键指标">
+      <article class="bank-kpi"><span>已结应付</span><strong id="bank-settled-count" data-testid="settled-count">0</strong><small id="bank-settled-ids">暂无</small></article>
+      <article class="bank-kpi warn"><span>挂账金额</span><strong id="bank-hanging-total" data-testid="suspense-total" data-hanging-cents="0">¥0.00</strong><small id="bank-hanging-count">0 笔挂账</small></article>
+      <article class="bank-kpi"><span>未结金额</span><strong id="bank-outstanding-total">¥0.00</strong><small id="bank-open-count">0 笔待结/部分</small></article>
+      <article class="bank-kpi"><span>销账记录</span><strong id="bank-allocation-count">0</strong><small id="bank-replay-count">重试 0 次，未重复销账</small></article>
+    </div>
+
+    <div class="bank-form-grid">
+      <form id="bank-payable-form" class="bank-form">
+        <h3>登记已签发应付</h3>
+        <label>应付单号 <input name="payable_id" placeholder="AP-1001" required></label>
+        <label>金额（分） <input name="amount_cents" type="number" min="1" step="1" placeholder="10000" required></label>
+        <label>签发状态
+          <select name="status">
+            <option value="ISSUED">ISSUED / 已签发</option>
+            <option value="DRAFT">DRAFT / 未签发（不参与）</option>
+          </select>
+        </label>
+        <button type="submit">加入应付台账</button>
+      </form>
+
+      <form id="bank-txn-form" class="bank-form">
+        <h3>登记银行到账</h3>
+        <label>到账流水号 <input name="bank_transaction_id" placeholder="BK-0001" required></label>
+        <label>到账金额（分） <input name="amount_cents" type="number" min="1" step="1" placeholder="30000" required></label>
+        <label>明确归属单号（可空，多个用逗号） <input name="payable_ids" placeholder="AP-A01,AP-B02"></label>
+        <label>摘要 <input name="memo" placeholder="例如：货款合并支付"></label>
+        <div class="bank-form-actions">
+          <button type="submit">处理到账并对账</button>
+          <button type="button" id="bank-retry-last" class="secondary">重放最近流水</button>
+        </div>
+        <p class="hint">相同流水号再次提交或点击重放，只会返回首次销账结果。</p>
+      </form>
+    </div>
+
+    <p id="bank-notice" class="bank-notice" role="status" aria-live="polite"></p>
+
+    <div class="bank-tables">
+      <article class="bank-table-panel">
+        <div class="panel-head"><h3>哪些应付已结</h3><span class="hint" id="bank-payable-count">0 笔</span></div>
+        <div class="table-wrap">
+          <table class="bank-table" data-testid="payable-table">
+            <thead><tr><th>应付单号</th><th>原金额</th><th>已结</th><th>剩余</th><th>状态</th><th>销账流水</th></tr></thead>
+            <tbody id="bank-payable-body"><tr><td colspan="6" class="empty">暂无数据，可载入演示场景。</td></tr></tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="bank-table-panel">
+        <div class="panel-head"><h3>挂账与歧义份额</h3><span class="hint">金额相符、归属不唯一</span></div>
+        <div id="bank-suspense-list" class="suspense-list" data-testid="suspense-list">
+          <p class="empty">暂无挂账。</p>
+        </div>
+      </article>
+    </div>
+
+    <article class="bank-table-panel">
+      <div class="panel-head"><h3>销账明细 / 银行流水</h3><span class="hint">已结款不可挪给别笔</span></div>
+      <div class="table-wrap">
+        <table class="bank-table" data-testid="allocation-table">
+          <thead><tr><th>流水号</th><th>应付</th><th>销账金额</th><th>来源</th><th>结清日</th><th>幂等</th></tr></thead>
+          <tbody id="bank-allocation-body"><tr><td colspan="6" class="empty">暂无销账。</td></tr></tbody>
+        </table>
+      </div>
+    </article>
+  </section>
 </main>
 {% endblock %}
